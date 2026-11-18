@@ -1,0 +1,787 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Gestão de Frotas</title>
+
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+
+    <div class="container">
+
+        <aside class="sidebar">
+
+            <div class="logo">
+                <h2>Gestão de Frotas</h2>
+            </div>
+
+            <nav class="menu">
+                <a href="#" class="menu-item active" data-secao="dashboard">
+                    Dashboard
+                </a>
+
+                <a href="#" class="menu-item" data-secao="veiculos">
+                    Veículos
+                </a>
+
+                <a href="#" class="menu-item" data-secao="motoristas">
+                    Motoristas
+                </a>
+
+                <a href="#" class="menu-item" data-secao="utilizacoes">
+                    Utilizações
+                </a>
+
+                <a href="#" class="menu-item" data-secao="abastecimentos">
+                    Abastecimentos
+                </a>
+
+                <a href="#" class="menu-item" data-secao="manutencoes">
+                    Manutenções
+                </a>
+            </nav>
+
+        </aside>
+
+        <main class="main-content">
+
+            <header class="header">
+
+                <div>
+                    <h1 id="tituloPagina">Dashboard</h1>
+                    <p id="subtituloPagina">Bem-vindo ao sistema de Gestão de Frotas.</p>
+                </div>
+
+                <div class="user-info">
+                    Administrador
+                </div>
+
+            </header>
+
+            <div class="secao ativa" id="secao-dashboard">
+
+                <section class="cards">
+
+                    <div class="card">
+                        <h3>Total de veículos</h3>
+                        <p id="totalVeiculos">0</p>
+                    </div>
+
+                    <div class="card">
+                        <h3>Disponíveis</h3>
+                        <p id="veiculosDisponiveis">0</p>
+                    </div>
+
+                    <div class="card">
+                        <h3>Em manutenção</h3>
+                        <p id="veiculosManutencao">0</p>
+                    </div>
+
+                    <div class="card">
+                        <h3>Em utilização</h3>
+                        <p id="veiculosUtilizacao">0</p>
+                    </div>
+
+                </section>
+
+                <section class="cards">
+
+                    <div class="card">
+                        <h3>Gasto com combustível</h3>
+                        <p class="valor-moeda" id="cartaoCombustivel">R$ 0,00</p>
+                    </div>
+
+                    <div class="card">
+                        <h3>Gasto com manutenção</h3>
+                        <p class="valor-moeda" id="cartaoManutencao">R$ 0,00</p>
+                    </div>
+
+                    <div class="card">
+                        <h3>Custo total</h3>
+                        <p class="valor-moeda" id="cartaoCustoTotal">R$ 0,00</p>
+                    </div>
+
+                    <div class="card">
+                        <h3>Utilizações registradas</h3>
+                        <p id="cartaoUtilizacoes">0</p>
+                        <span class="detalhe-card" id="cartaoUtilizacoesAbertas"></span>
+                    </div>
+
+                </section>
+
+                                <section class="content-section">
+
+                    <div class="section-header">
+                        <div>
+                            <h2>Custo por quilômetro</h2>
+                            <p>Compare o custo operacional dos veículos em um período.</p>
+                        </div>
+                    </div>
+
+                    <form class="filtro-periodo" id="formPeriodo">
+
+                        <div class="campo">
+                            <label for="campoPeriodoInicio">Data inicial</label>
+                            <input type="date" id="campoPeriodoInicio" required>
+                        </div>
+
+                        <div class="campo">
+                            <label for="campoPeriodoFim">Data final</label>
+                            <input type="date" id="campoPeriodoFim" required>
+                        </div>
+
+                        <button type="submit" id="btnCalcularCusto">Calcular</button>
+
+                    </form>
+
+                    <p class="mensagem-form" id="mensagemPeriodo"></p>
+
+                    <div class="table-container">
+
+                        <table>
+
+                            <thead>
+                                <tr>
+                                    <th>Veículo</th>
+                                    <th>Combustível</th>
+                                    <th>Manutenção</th>
+                                    <th>Custo total</th>
+                                    <th>Km percorridos</th>
+                                    <th>Custo por km</th>
+                                </tr>
+                            </thead>
+
+                            <tbody id="listaCustoKm">
+
+                                <tr>
+                                    <td colspan="6">Nenhum cálculo carregado.</td>
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+
+                    </div>
+
+                    <p class="nota-calculo">
+                        Custo por km = (abastecimentos + manutenções concluídas) ÷ km percorridos em
+                        utilizações encerradas no período. Veículos sem km percorrido no período
+                        não têm custo por km calculado.
+                    </p>
+
+                </section>
+
+            </div>
+
+
+            <div class="secao" id="secao-veiculos">
+
+                <section class="content-section">
+
+                    <div class="section-header">
+                        <div>
+                            <h2>Veículos cadastrados</h2>
+                            <p>Visualize os veículos registrados no sistema.</p>
+                        </div>
+
+                        <button id="btnNovoVeiculo">
+                            + Novo veículo
+                        </button>
+                    </div>
+
+                    <div class="table-container">
+
+                        <table>
+
+                            <thead>
+                                <tr>
+                                    <th>Placa</th>
+                                    <th>Marca</th>
+                                    <th>Modelo</th>
+                                    <th>Ano</th>
+                                    <th>Quilometragem</th>
+                                    <th>Combustível</th>
+                                    <th>Status</th>
+                                    <th>Ações</th>
+                                </tr>
+                            </thead>
+
+                            <tbody id="listaVeiculos">
+
+                                <tr>
+                                    <td colspan="8">
+                                        Nenhum veículo carregado.
+                                    </td>
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+
+                    </div>
+
+                </section>
+
+            </div>
+
+            <div class="secao" id="secao-motoristas">
+
+                <section class="content-section">
+
+                    <div class="section-header">
+                        <div>
+                            <h2>Motoristas cadastrados</h2>
+                            <p>Gerencie os motoristas e a validade das CNHs.</p>
+                        </div>
+
+                        <button id="btnNovoMotorista">
+                            + Novo motorista
+                        </button>
+                    </div>
+
+                    <div class="table-container">
+
+                        <table>
+
+                            <thead>
+                                <tr>
+                                    <th>Nome</th>
+                                    <th>CNH</th>
+                                    <th>Validade da CNH</th>
+                                    <th>Telefone</th>
+                                    <th>Status</th>
+                                    <th>Ações</th>
+                                </tr>
+                            </thead>
+
+                            <tbody id="listaMotoristas">
+
+                                <tr>
+                                    <td colspan="6">
+                                        Nenhum motorista carregado.
+                                    </td>
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+
+                    </div>
+
+                </section>
+
+            </div>
+
+            <div class="secao" id="secao-utilizacoes">
+
+                <section class="content-section">
+
+                    <div class="section-header">
+                        <div>
+                            <h2>Histórico de utilizações</h2>
+                            <p>Registre a saída e o retorno dos veículos.</p>
+                        </div>
+
+                        <button id="btnNovaSaida">
+                            + Registrar saída
+                        </button>
+                    </div>
+
+                    <div class="table-container">
+
+                        <table>
+
+                            <thead>
+                                <tr>
+                                    <th>Veículo</th>
+                                    <th>Motorista</th>
+                                    <th>Finalidade</th>
+                                    <th>Saída</th>
+                                    <th>Retorno</th>
+                                    <th>Km inicial</th>
+                                    <th>Km final</th>
+                                    <th>Situação</th>
+                                    <th>Ações</th>
+                                </tr>
+                            </thead>
+
+                            <tbody id="listaUtilizacoes">
+
+                                <tr>
+                                    <td colspan="9">
+                                        Nenhuma utilização carregada.
+                                    </td>
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+
+                    </div>
+
+                </section>
+
+            </div>
+
+            <div class="secao" id="secao-abastecimentos">
+
+                <section class="content-section">
+
+                    <div class="section-header">
+                        <div>
+                            <h2>Total gasto por veículo</h2>
+                            <p>Soma dos abastecimentos registrados em cada veículo.</p>
+                        </div>
+                    </div>
+
+                    <div class="table-container">
+
+                        <table>
+
+                            <thead>
+                                <tr>
+                                    <th>Veículo</th>
+                                    <th>Abastecimentos</th>
+                                    <th>Litros</th>
+                                    <th>Total gasto</th>
+                                </tr>
+                            </thead>
+
+                            <tbody id="listaTotaisAbastecimento">
+
+                                <tr>
+                                    <td colspan="4">Nenhum total carregado.</td>
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+
+                    </div>
+
+                    <p class="total-geral" id="totalGeralAbastecimentos"></p>
+
+                </section>
+
+                <section class="content-section">
+
+                    <div class="section-header">
+                        <div>
+                            <h2>Histórico de abastecimentos</h2>
+                            <p>Registre e consulte os abastecimentos da frota.</p>
+                        </div>
+
+                        <button id="btnNovoAbastecimento">
+                            + Registrar abastecimento
+                        </button>
+                    </div>
+
+                    <div class="table-container">
+
+                        <table>
+
+                            <thead>
+                                <tr>
+                                    <th>Data</th>
+                                    <th>Veículo</th>
+                                    <th>Combustível</th>
+                                    <th>Quilometragem</th>
+                                    <th>Litros</th>
+                                    <th>Valor por litro</th>
+                                    <th>Valor pago</th>
+                                </tr>
+                            </thead>
+
+                            <tbody id="listaAbastecimentos">
+
+                                <tr>
+                                    <td colspan="7">Nenhum abastecimento carregado.</td>
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+
+                    </div>
+
+                </section>
+
+            </div>
+
+            <div class="secao" id="secao-manutencoes">
+
+                <section class="content-section">
+
+                    <div class="section-header">
+                        <div>
+                            <h2>Total gasto com manutenção por veículo</h2>
+                            <p>Soma das manutenções concluídas em cada veículo.</p>
+                        </div>
+                    </div>
+
+                    <div class="table-container">
+
+                        <table>
+
+                            <thead>
+                                <tr>
+                                    <th>Veículo</th>
+                                    <th>Manutenções concluídas</th>
+                                    <th>Total gasto</th>
+                                </tr>
+                            </thead>
+
+                            <tbody id="listaTotaisManutencao">
+
+                                <tr>
+                                    <td colspan="3">Nenhum total carregado.</td>
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+
+                    </div>
+
+                    <p class="total-geral" id="totalGeralManutencoes"></p>
+
+                </section>
+
+                <section class="content-section">
+
+                    <div class="section-header">
+                        <div>
+                            <h2>Histórico de manutenções</h2>
+                            <p>Registre e acompanhe as manutenções da frota.</p>
+                        </div>
+
+                        <button id="btnNovaManutencao">
+                            + Registrar manutenção
+                        </button>
+                    </div>
+
+                    <div class="table-container">
+
+                        <table>
+
+                            <thead>
+                                <tr>
+                                    <th>Data</th>
+                                    <th>Veículo</th>
+                                    <th>Tipo</th>
+                                    <th>Descrição</th>
+                                    <th>Quilometragem</th>
+                                    <th>Custo</th>
+                                    <th>Status</th>
+                                    <th>Ações</th>
+                                </tr>
+                            </thead>
+
+                            <tbody id="listaManutencoes">
+
+                                <tr>
+                                    <td colspan="8">Nenhuma manutenção carregada.</td>
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+
+                    </div>
+
+                </section>
+
+            </div>
+
+        </main>
+
+    </div>
+
+    <div class="modal" id="modalVeiculo">
+        <div class="modal-content">
+
+            <h2 id="tituloModal">Novo veículo</h2>
+
+            <form id="formVeiculo">
+
+                <div class="campo">
+                    <label for="campoPlaca">Placa</label>
+                    <input type="text" id="campoPlaca" maxlength="8" placeholder="ABC1D23" required>
+                </div>
+
+                <div class="campo">
+                    <label for="campoMarca">Marca</label>
+                    <input type="text" id="campoMarca" placeholder="Ex.: Toyota" required>
+                </div>
+
+                <div class="campo">
+                    <label for="campoModelo">Modelo</label>
+                    <input type="text" id="campoModelo" placeholder="Ex.: Corolla" required>
+                </div>
+
+                <div class="campo">
+                    <label for="campoAno">Ano</label>
+                    <input type="number" id="campoAno" placeholder="Ex.: 2022" required>
+                </div>
+
+                <div class="campo">
+                    <label for="campoKm">Quilometragem atual</label>
+                    <input type="number" id="campoKm" min="0" step="0.01" value="0">
+                </div>
+
+                <div class="campo">
+                    <label for="campoCombustivel">Tipo de combustível</label>
+                    <select id="campoCombustivel">
+                        <option value="Flex">Flex</option>
+                        <option value="Gasolina">Gasolina</option>
+                        <option value="Etanol">Etanol</option>
+                        <option value="Diesel">Diesel</option>
+                        <option value="GNV">GNV</option>
+                        <option value="Elétrico">Elétrico</option>
+                    </select>
+                </div>
+
+            <p class="texto-ajuda">O status do veículo é controlado automaticamente pelo sistema, a partir das utilizações e das manutenções.</p>
+
+                <p class="mensagem-form" id="mensagemForm"></p>
+
+                <div class="botoes-form">
+                    <button type="button" class="btn-secundario" id="btnCancelar">Cancelar</button>
+                    <button type="submit" id="btnSalvar">Salvar</button>
+                </div>
+
+            </form>
+
+        </div>
+    </div>
+
+    <div class="modal" id="modalMotorista">
+        <div class="modal-content">
+
+            <h2 id="tituloModalMotorista">Novo motorista</h2>
+
+            <form id="formMotorista">
+
+                <div class="campo">
+                    <label for="campoNomeMotorista">Nome</label>
+                    <input type="text" id="campoNomeMotorista" placeholder="Nome completo" required>
+                </div>
+
+                <div class="campo">
+                    <label for="campoCnh">CNH</label>
+                    <input type="text" id="campoCnh" maxlength="14" placeholder="11 números" required>
+                </div>
+
+                <div class="campo">
+                    <label for="campoValidadeCnh">Validade da CNH</label>
+                    <input type="date" id="campoValidadeCnh" required>
+                </div>
+
+                <div class="campo">
+                    <label for="campoTelefone">Telefone (opcional)</label>
+                    <input type="text" id="campoTelefone" maxlength="15" placeholder="(84) 99999-9999">
+                </div>
+
+                <div class="campo">
+                    <label for="campoStatusMotorista">Status</label>
+                    <select id="campoStatusMotorista">
+                        <option value="Ativo">Ativo</option>
+                        <option value="Inativo">Inativo</option>
+                    </select>
+                </div>
+
+                <p class="mensagem-form" id="mensagemFormMotorista"></p>
+
+                <div class="botoes-form">
+                    <button type="button" class="btn-secundario" id="btnCancelarMotorista">Cancelar</button>
+                    <button type="submit" id="btnSalvarMotorista">Salvar</button>
+                </div>
+
+            </form>
+
+        </div>
+    </div>
+
+    <div class="modal" id="modalSaida">
+        <div class="modal-content">
+
+            <h2>Registrar saída</h2>
+
+            <form id="formSaida">
+
+                <div class="campo">
+                    <label for="campoVeiculoSaida">Veículo</label>
+                    <select id="campoVeiculoSaida" required></select>
+                </div>
+
+                <div class="campo">
+                    <label for="campoMotoristaSaida">Motorista</label>
+                    <select id="campoMotoristaSaida" required></select>
+                </div>
+
+                <div class="campo">
+                    <label for="campoFinalidade">Finalidade</label>
+                    <input type="text" id="campoFinalidade" maxlength="150" placeholder="Ex.: Entrega de mercadorias" required>
+                </div>
+
+                <p class="mensagem-form" id="mensagemFormSaida"></p>
+
+                <div class="botoes-form">
+                    <button type="button" class="btn-secundario" id="btnCancelarSaida">Cancelar</button>
+                    <button type="submit" id="btnSalvarSaida">Registrar saída</button>
+                </div>
+
+            </form>
+
+        </div>
+    </div>
+
+    <div class="modal" id="modalRetorno">
+        <div class="modal-content">
+
+            <h2>Registrar retorno</h2>
+
+            <p class="texto-ajuda" id="infoRetorno"></p>
+
+            <form id="formRetorno">
+
+                <div class="campo">
+                    <label for="campoKmFinal">Quilometragem final</label>
+                    <input type="number" id="campoKmFinal" min="0" step="0.01" placeholder="Ex.: 10120" required>
+                </div>
+
+                <p class="mensagem-form" id="mensagemFormRetorno"></p>
+
+                <div class="botoes-form">
+                    <button type="button" class="btn-secundario" id="btnCancelarRetorno">Cancelar</button>
+                    <button type="submit" id="btnSalvarRetorno">Registrar retorno</button>
+                </div>
+
+            </form>
+
+        </div>
+    </div>
+
+    <div class="modal" id="modalAbastecimento">
+        <div class="modal-content">
+
+            <h2>Registrar abastecimento</h2>
+
+            <form id="formAbastecimento">
+
+                <div class="campo">
+                    <label for="campoVeiculoAbastecimento">Veículo</label>
+                    <select id="campoVeiculoAbastecimento" required></select>
+                </div>
+
+                <div class="campo">
+                    <label for="campoDataAbastecimento">Data e hora</label>
+                    <input type="datetime-local" id="campoDataAbastecimento" required>
+                </div>
+
+                <div class="campo">
+                    <label for="campoKmAbastecimento">Quilometragem</label>
+                    <input type="number" id="campoKmAbastecimento" step="0.01" required>
+                </div>
+
+                <div class="campo">
+                    <label for="campoLitros">Litros</label>
+                    <input type="number" id="campoLitros" step="0.01" placeholder="Ex.: 40" required>
+                </div>
+
+                <div class="campo">
+                    <label for="campoValorPago">Valor pago (R$)</label>
+                    <input type="number" id="campoValorPago" step="0.01" placeholder="Ex.: 240.00" required>
+                </div>
+
+                <p class="mensagem-form" id="mensagemFormAbastecimento"></p>
+
+                <div class="botoes-form">
+                    <button type="button" class="btn-secundario" id="btnCancelarAbastecimento">Cancelar</button>
+                    <button type="submit" id="btnSalvarAbastecimento">Registrar</button>
+                </div>
+
+            </form>
+
+        </div>
+    </div>
+
+    <div class="modal" id="modalManutencao">
+        <div class="modal-content">
+
+            <h2>Registrar manutenção</h2>
+
+            <p class="texto-ajuda">Somente manutenções pendentes (agendadas) podem ter data no futuro.</p>
+
+            <form id="formManutencao">
+
+                <div class="campo">
+                    <label for="campoVeiculoManutencao">Veículo</label>
+                    <select id="campoVeiculoManutencao" required></select>
+                </div>
+
+                <div class="campo">
+                    <label for="campoTipoManutencao">Tipo</label>
+                    <select id="campoTipoManutencao">
+                        <option value="Preventiva">Preventiva</option>
+                        <option value="Corretiva">Corretiva</option>
+                    </select>
+                </div>
+
+                <div class="campo">
+                    <label for="campoDescricao">Descrição</label>
+                    <textarea id="campoDescricao" rows="3" maxlength="500" placeholder="Ex.: Troca de óleo e filtros" required></textarea>
+                </div>
+
+                <div class="campo">
+                    <label for="campoDataManutencao">Data e hora</label>
+                    <input type="datetime-local" id="campoDataManutencao" required>
+                </div>
+
+                <div class="campo">
+                    <label for="campoKmManutencao">Quilometragem</label>
+                    <input type="number" id="campoKmManutencao" step="0.01" required>
+                </div>
+
+                <div class="campo">
+                    <label for="campoCustoManutencao">Custo (R$)</label>
+                    <input type="number" id="campoCustoManutencao" step="0.01" placeholder="Ex.: 350.00" required>
+                </div>
+
+                <div class="campo">
+                    <label for="campoStatusManutencao">Status</label>
+                    <select id="campoStatusManutencao">
+                        <option value="Pendente">Pendente</option>
+                        <option value="Em andamento">Em andamento</option>
+                        <option value="Concluída">Concluída</option>
+                    </select>
+                </div>
+
+                <p class="mensagem-form" id="mensagemFormManutencao"></p>
+
+                <div class="botoes-form">
+                    <button type="button" class="btn-secundario" id="btnCancelarManutencao">Cancelar</button>
+                    <button type="submit" id="btnSalvarManutencao">Registrar</button>
+                </div>
+
+            </form>
+
+        </div>
+    </div>
+
+    <script src="js/script.js"></script>
+    <script src="js/motoristas.js"></script>
+        <script src="js/utilizacoes.js"></script>
+            <script src="js/abastecimentos.js"></script>
+                <script src="js/manutencoes.js"></script>
+                    <script src="js/dashboard.js"></script>
+                        <script src="js/custoPorKm.js"></script>
+
+</body>
+
+</html>
